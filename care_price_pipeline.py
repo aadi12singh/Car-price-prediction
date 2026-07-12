@@ -69,3 +69,20 @@ plt.tight_layout()
 
 plt.savefig('evaluation_regression_plot.png')
 print("Validation matrix diagram saved successfully as 'evaluation_regression_plot.png'!")
+
+
+cat_features = model_pipeline.named_steps['preprocessor'].transformers_[1][1].get_feature_names_out(categorical_cols).tolist()
+all_features = numerical_cols + cat_features
+
+importances = model_pipeline.named_steps['regressor'].feature_importances_
+
+feature_imp_df = pd.DataFrame({'Feature': all_features, 'Importance': importances}).sort_values(by='Importance', ascending=False).head(10)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x='Importance', y='Feature', data=feature_imp_df, palette='viridis')
+plt.title('Top 10 Most Important Features for Predicting Car Prices')
+plt.xlabel('Importance Score')
+plt.ylabel('Feature')
+plt.tight_layout()
+plt.savefig('car_feature_importance.png')
+print("Superior Feature Importance Graph saved as 'car_feature_importance.png'!")
